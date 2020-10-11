@@ -2,6 +2,7 @@ import React from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import ItemForm from './ItemForm';
 import ItemList from './ItemList';
+import API from './api';
 
 class InsertableItemTable extends React.Component {
   constructor(props) {
@@ -10,15 +11,22 @@ class InsertableItemTable extends React.Component {
     this.handleToggle = this.handleToggle.bind(this);
     this.handleNewItem = this.handleNewItem.bind(this);
     this.handleRemoveItem = this.handleRemoveItem.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
 
-    const items = props.items.slice();
-    items.sort((a, b) => a.position - b.position);
-
     this.state = {
-      items: items
+      items: []
     };
   }
+
+  componentDidMount() {
+    API.get(`items/`)
+      .then(res => {
+        const items = res.data;
+        this.setState({ items });
+      })
+  }
+
 
   handleToggle(index) {
     this.setState(state => {
@@ -34,25 +42,43 @@ class InsertableItemTable extends React.Component {
     });
   }
 
-  handleNewItem(value) {
+  handleEdit(label, index) {
     this.setState(state => {
       const items = state.items;
-      const newItem = {
-        id: items.length,
-        name: value,
-        checked: false,
-        position: items.length,
-      };
-      const newItems = [...items, newItem];
+      let copy = [...items];
+      let item = {...items[index]};
+      item.name = label;
+      copy[index] = item;
 
       return {
-        items: newItems,
+        items: copy
       };
     });
   }
 
+  handleNewItem(value) {
+    const items = this.state.items;
+    const newItem = {
+      name: value,
+      position: items.length,
+    };
+
+    API.post(`items/`, newItem)
+      .then(res => {
+        const item = res.data; 
+        this.setState({ items: [...items, item], })
+      });
+
+  }
+
   handleRemoveItem(index) {
-    // TODO uptdate sort orders
+    const id = this.state.items[index].id;
+    API.delete(`items/` + id)
+      .then(res => API.get(`items/`))
+      .then(res => {
+        const items = res.data;
+        this.setState({ items: items });
+      });
     this.setState(state => {
       const items = state.items.filter((_, j) => index !== j);
       return {
@@ -84,6 +110,7 @@ class InsertableItemTable extends React.Component {
           <ItemForm onSubmitItem={this.handleNewItem} />
           <ItemList items={this.state.items}
                     onToggle={this.handleToggle}
+                    onEdit={this.handleEdit}
                     onRemove={this.handleRemoveItem} />
         </DragDropContext>
         </div>

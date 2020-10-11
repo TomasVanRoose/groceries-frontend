@@ -2,16 +2,8 @@ import React from 'react';
 import './App.css';
 import InsertableItemTable from './InsertableItemTable';
 
-
-const ITEMS = [
-  {id: 1, name:"Tomaten", checked: false, position: 0},
-  {id: 2, name:"Aardappels", checked: false, position: 1},
-  {id: 3, name:"6 flessen ice tea", checked: false, position: 2},
-  {id: 4, name:"Nalu", checked: true, position: 3},
-  {id: 5, name:"Besjes", checked: false, position: 4}
-];
-
 function App() {
+  
   return (
     <div>
     <div className="uk-section-secondary uk-preserve-color">
@@ -30,7 +22,7 @@ function App() {
         </div>
       </nav>
     </div>
-    <InsertableItemTable items={ITEMS} />
+    <InsertableItemTable />
     </div>
   );
 }

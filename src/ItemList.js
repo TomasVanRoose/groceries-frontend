@@ -6,6 +6,7 @@ class ItemList extends React.Component {
   render() {
     const onToggle = this.props.onToggle;
     const onRemove = this.props.onRemove;
+    const onEdit = this.props.onEdit;
 
     const rows = [];
     this.props.items.forEach((item, index) => {
@@ -16,6 +17,7 @@ class ItemList extends React.Component {
                  checked={item.checked}
                  index={index} 
                  onToggle={onToggle}
+                 onEdit={onEdit}
                  onRemove={onRemove} />
       );
     });
