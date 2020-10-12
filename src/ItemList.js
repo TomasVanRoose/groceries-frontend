@@ -14,7 +14,7 @@ class ItemList extends React.Component {
         <ItemRow key={item.id}
                  id={item.id}
                  label={item.name}
-                 checked={item.checked}
+                 checked={item.checked_off}
                  index={index} 
                  onToggle={onToggle}
                  onEdit={onEdit}

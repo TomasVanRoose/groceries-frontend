@@ -29,11 +29,14 @@ class InsertableItemTable extends React.Component {
 
 
   handleToggle(index) {
+    const items = this.state.items;
+    let item = {...items[index]};
+    item.checked_off = !item.checked_off;
+
+    API.put(`items/` + item.id, item);
+
     this.setState(state => {
-      const items = state.items;
       let copy = [...items];
-      let item = {...items[index]};
-      item.checked = !item.checked;
       copy[index] = item;
 
       return {
@@ -43,11 +46,14 @@ class InsertableItemTable extends React.Component {
   }
 
   handleEdit(label, index) {
+    const items = this.state.items;
+    let item = {...items[index]};
+    item.name = label;
+
+    API.put(`items/` + item.id, item);
+
     this.setState(state => {
-      const items = state.items;
       let copy = [...items];
-      let item = {...items[index]};
-      item.name = label;
       copy[index] = item;
 
       return {
